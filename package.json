@@ -15,6 +15,7 @@
     "method-override": "^3.0.0",
     "mongoose": "^8.9.5",
     "nodemon": "^3.1.9",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "project-express-mongodb": "file:"
   }
 }
