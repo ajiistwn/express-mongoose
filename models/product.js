@@ -1,30 +1,33 @@
-const mongoose = require("mongoose")
 
+const mongoose = require('mongoose')
 
-const ProductSchema = new mongoose.Schema({
+const productSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true, "Nama tidak boleh kosong!"],
+        required: [true, 'nama tidak boleh kosong']
     },
     brand: {
         type: String,
-        required:  [true, "Brand tidak boleh kosong!"]
-    },
-    color: {
-        type: String,
-        required:  [true, "Warna tidak boleh kosong!"]
+        required: true
     },
     price: {
         type: Number,
-        required:  [true, "Harga tidak boleh kosong!"]
+        required: true
+    },
+    color: {
+        type: String,
+        required: true
     },
     category: {
         type: String,
-        enum: ["Baju", "Celana", "Aksesoris", "Jaket"],
-
+        enum: ['Baju', 'Celana', 'Aksesoris', 'Jaket'],
     },
+    garment: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Garment",
+    }
 })
 
-const Product = mongoose.model("Product", ProductSchema)
+const Product = mongoose.model('Product', productSchema)
 
 module.exports = Product

@@ -25,10 +25,20 @@
             Harga : <%= product.price %>
         </li>
         <li>
-            Ketegori : 
+            Ketegori :
             <a href="/products?category=<%= product.category %>">
                 <%= product.category %>
             </a>
+        </li>
+    </ul>
+    <h1>Garment:</h1>
+    <ul>
+        <li>
+            <% if(product.garment){ %>
+                <a href="/garments/<%= product.garment._id %>">
+                    <%= product.garment.name %>
+                </a>
+                <% } %>
         </li>
     </ul>
     <a href="/products">All Products</a>

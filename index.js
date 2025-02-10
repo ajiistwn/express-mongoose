@@ -7,6 +7,7 @@ const ErrorHandler = require("./ErrorHandler")
 
 // Models
 const Product = require("./models/product")
+const Garment = require("./models/garment")
 const { error } = require("console")
 
 //connect to mongodb
@@ -34,6 +35,48 @@ app.get("/", (req, res) => {
     res.render("home/index")
 })
 
+app.get("/garments", wrapAsync(async (req, res) => {
+    const garments = await Garment.find({})
+    res.render("garment/index", { garments })
+}))
+
+app.get("/garments/create", (req, res) => {
+    res.render("garment/create")
+})
+
+app.post("/garments", wrapAsync(async (req, res) => {
+    const garment = new Garment(req.body)
+    await garment.save()
+    res.redirect(`/garments`)
+}))
+
+app.get("/garments/:id", wrapAsync(async (req, res) => {
+    const { id } = req.params
+    const garment = await Garment.findById(id).populate("products")
+    res.render("garment/show", { garment })
+}))
+
+app.get("/garments/:garment_id/products/create", async (req, res) => {
+    const { garment_id } = req.params
+    res.render("product/create", { garment_id })
+})
+
+app.post("/garments/:garment_id/products", wrapAsync(async (req, res) => {
+    const { garment_id } = req.params
+    const garment = await Garment.findById(garment_id)
+    const product = new Product(req.body)
+    garment.products.push(product)
+    product.garment = garment
+    await garment.save()
+    await product.save()
+    res.redirect(`/garments/${garment_id}`)
+}))
+
+app.delete("/garments/:id", wrapAsync(async (req, res) => {
+    const { id } = req.params
+    await Garment.findOneAndDelete({ _id: id })
+    res.redirect("/garments")
+}))
 
 app.get("/products/create", (req, res) => {
     // throw new ErrorHandler("this is custom error", 503)
@@ -61,7 +104,8 @@ app.get("/products", wrapAsync(async (req, res) => {
 
 app.get("/products/:id", wrapAsync(async (req, res) => {
     const { id } = req.params
-    const product = await Product.findById(id)
+    const product = await Product.findById(id).populate("garment")
+
     res.render("product/detail", { product })
 }))
 
